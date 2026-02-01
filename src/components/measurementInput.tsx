@@ -7,12 +7,16 @@ interface DimensionProps {
   selectedUnit: string;
   setSelectedDimension: (d: DimensionId) => void;
   setSelectedUnit: (u: string) => void;
+  inputValue: string;
+  setInputValue: (v: string) => void;
 }
 
 export default function InputMeasurement({
   selectedDimension,
   selectedUnit,
   setSelectedUnit,
+  inputValue,
+  setInputValue,
 }: DimensionProps) {
   const units = DIMENSIONS[selectedDimension].units;
   return (
@@ -24,6 +28,9 @@ export default function InputMeasurement({
           </label>
           <div className="flex">
             <input
+              type="number"
+              onChange={(e) => setInputValue(e.target.value)}
+              value={inputValue}
               className="block text-[2.5rem] font-bold border-none outline-none focus:outline-none"
               placeholder="1,200"
             />
@@ -32,7 +39,7 @@ export default function InputMeasurement({
         <select
           value={selectedUnit}
           onChange={(e) => setSelectedUnit(e.target.value)}
-          className="bg-[#2779f3] text-[#f3f3f3] focus:outline-none rounded-[16px] p-2"
+          className="bg-[#2779fd] text-[#f3f3f3] focus:outline-none rounded-[16px] p-2"
         >
           {units.map((unit) => (
             <option key={unit.id} value={unit.id}>
@@ -40,10 +47,6 @@ export default function InputMeasurement({
             </option>
           ))}
         </select>
-
-        {/* <div className="w-1/3 text-center bg-[#2779FD] text-[#f3f3f3] text-[0.875rem] rounded-[16px] p-2">
-          Meters
-        </div> */}
       </div>
     </div>
   );

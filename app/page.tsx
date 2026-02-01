@@ -3,29 +3,46 @@ import Dimension from "@/src/components/Dimension";
 import InputMeasurement from "@/src/components/measurementInput";
 import Result from "@/src/components/Result";
 import { Camera, Ruler, RefreshCw, Info } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { DimensionId } from "@/src/types";
-import { DIMENSIONS } from "@/src/lib/units";
+import { convert, DIMENSIONS } from "@/src/lib/units";
 
 export default function Home() {
   const [selectedDimension, setSelectedDimension] =
     useState<DimensionId>("length");
-
+  const [inputValue, setInputValue] = useState("");
+  const [convertedValue, setConvertedValue] = useState<number>(0);
   const [selectedUnit, setSelectedUnit] = useState<string>("mm");
-
   const [targetResult, setTargetResult] = useState<string>("in");
 
-  const targetUnits = DIMENSIONS[selectedDimension].units.filter(
-    (unit) => unit.id !== selectedUnit,
-  );
+  const targetUnits = useMemo(() => {
+    return DIMENSIONS[selectedDimension].units.filter(
+      (u) => u.id !== selectedUnit,
+    );
+  }, [selectedDimension, selectedUnit]);
 
   useEffect(() => {
-    if (!targetUnits.find((u) => u.id === targetResult)) {
+    if (!targetUnits.some((u) => u.id === targetResult)) {
       setTargetResult(targetUnits[0]?.id ?? "");
     }
-  }, [selectedUnit, selectedDimension]);
+  }, [targetUnits]);
+  const numericValue = Number(inputValue);
+  const handleCalculation = (
+    numericValue: number,
+    selectedUnit: string,
+    targetResult: string,
+    selectedDimension: DimensionId,
+  ) => {
+    const { result } = convert(
+      numericValue,
+      selectedUnit,
+      targetResult,
+      selectedDimension,
+    );
 
-  console.log("available units to be converted to", targetUnits);
+    setConvertedValue(result);
+  };
+
   return (
     <div className="">
       <main>
@@ -40,20 +57,35 @@ export default function Home() {
         <Dimension
           setSelectedDimension={setSelectedDimension}
           selectedDimension={selectedDimension}
+          setSelectedUnit={setSelectedUnit}
+          setTargetResult={setTargetResult}
         />
         <InputMeasurement
           setSelectedDimension={setSelectedDimension}
           selectedDimension={selectedDimension}
           selectedUnit={selectedUnit}
           setSelectedUnit={setSelectedUnit}
+          inputValue={inputValue}
+          setInputValue={setInputValue}
         />
         <Result
           targetUnits={targetUnits}
           targetResult={targetResult}
           setTargetResult={setTargetResult}
+          convertedValue={convertedValue}
         />
 
-        <button className="w-full bg-[#2779fd] text-[#f3f3f3] rounded-[8px] px-4 py-3">
+        <button
+          onClick={() =>
+            handleCalculation(
+              numericValue,
+              selectedUnit,
+              targetResult,
+              selectedDimension,
+            )
+          }
+          className="w-full bg-[#2779fd] text-[#f3f3f3] rounded-[8px] px-4 py-3"
+        >
           Calculate
         </button>
       </main>

@@ -132,15 +132,42 @@ export function convertUnits(value: number, from: string, to: string): number {
   return mmValue / conversionToMm[to];
 }
 
-// function convert(value:number, fromUnit:string, toUnit:string, dimension:string) {
-//   const dim = DIMENSIONS[dimension];
+export function convert(
+  value: number,
+  fromUnit: string,
+  toUnit: string,
+  dimension: DimensionId,
+): {
+  baseValue: number;
+  result: number;
+} {
+  const dim = DIMENSIONS[dimension];
 
-//   // Special case: Temperature (non-linear)
-//   if (dimension === 'temperature') {
-//     return convertTemperature(value, fromUnit, toUnit);
-//   }
+  // Special case: Temperature (non-linear)
+  // if (dimension === 'temperature') {
+  //   return convertTemperature(value, fromUnit, toUnit);
+  // }
 
-//   // Linear conversions (Length, Weight, Volume, Area)
-//   const baseValue = value * dim.conversions[fromUnit];
-//   return baseValue / dim.conversions[toUnit];
+  // Linear conversions (Length, Weight, Volume, Area)
+  const baseValue = value * dim.conversions[fromUnit];
+  console.log("converted value", baseValue);
+  const result = baseValue / dim.conversions[toUnit];
+
+  return {
+    baseValue,
+    result,
+  };
+}
+
+// function convertTemperature(value: number, from: string, to: string) {
+//   // Convert to Celsius first
+//   let celsius;
+//   if (from === "c") celsius = value;
+//   else if (from === "f") celsius = ((value - 32) * 5) / 9;
+//   else if (from === "k") celsius = value - 273.15;
+
+//   // Convert from Celsius to target
+//   if (to === "c") return celsius;
+//   else if (to === "f") return (celsius * 9) / 5 + 32;
+//   else if (to === "k") return celsius + 273.15;
 // }

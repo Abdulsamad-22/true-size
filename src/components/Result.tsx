@@ -6,12 +6,14 @@ interface UnitProps {
   targetUnits: Unit[];
   targetResult: string;
   setTargetResult: (u: string) => void;
+  convertedValue: number;
 }
 
 export default function Result({
   targetUnits,
   targetResult,
   setTargetResult,
+  convertedValue,
 }: UnitProps) {
   return (
     <div className="bg-[#EFF2F6] border-[1px] border-[#EBEAEA] rounded-[12px] px-[0.75rem] py-[1rem] overflow-hidden mb-8">
@@ -22,7 +24,12 @@ export default function Result({
           </label>
           <div className="flex">
             <div className="text-[#212121] text-[2.5rem] font-bold">
-              1,200<span className="text-[1.25rem] font-medium">cm</span>
+              {convertedValue.toFixed(2).toLocaleString()}
+              {
+                <span className="text-[1.25rem] font-medium">
+                  {targetResult}
+                </span>
+              }
             </div>
           </div>
         </div>
