@@ -1,4 +1,4 @@
-import { Unit } from "../types";
+import { Dimension, DimensionId, Unit } from "../types";
 
 export const units: Unit[] = [
   { id: "mm", name: "Millimeters", symbol: "mm" },
@@ -15,7 +15,7 @@ const conversionToMm: Record<string, number> = {
   ft: 304.8,
 };
 
-export const DIMENSIONS = {
+export const DIMENSIONS: Record<DimensionId, Dimension> = {
   length: {
     id: "length",
     name: "Length",
@@ -85,21 +85,24 @@ export const DIMENSIONS = {
     },
   },
 
-  // temperature: {
-  //   id: 'temperature',
-  //   name: 'Temperature',
-  //   icon: 'Thermometer',
-  //   measurementMethod: 'Sensor', // Phone temperature sensor
-  //   units: [
-  //     { id: 'c', name: 'Celsius', symbol: '°C' },
-  //     { id: 'f', name: 'Fahrenheit', symbol: '°F' },
-  //     { id: 'k', name: 'Kelvin', symbol: 'K' }
-  //   ],
-  //   // Temperature needs custom conversion (not linear)
-  //   // convert: (value, from, to) => {
-  //   //   // Custom logic for temperature
-  //   // }
-  // },
+  temperature: {
+    id: "temperature",
+    name: "Temperature",
+    units: [
+      { id: "c", name: "Celsius", symbol: "°C" },
+      { id: "f", name: "Fahrenheit", symbol: "°F" },
+      { id: "k", name: "Kelvin", symbol: "K" },
+    ],
+    conversions: {
+      ml: 1,
+      l: 1000,
+      cup: 236.588,
+      pt: 473.176,
+      qt: 946.353,
+      gal: 3785.41,
+      m3: 1000000,
+    },
+  },
 
   // area: {
   //   id: 'area',

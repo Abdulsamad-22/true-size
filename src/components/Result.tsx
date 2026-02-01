@@ -1,4 +1,18 @@
-export default function Result() {
+import { Unit } from "../types";
+
+type DimensionId = "length" | "weight" | "temperature";
+
+interface UnitProps {
+  targetUnits: Unit[];
+  targetResult: string;
+  setTargetResult: (u: string) => void;
+}
+
+export default function Result({
+  targetUnits,
+  targetResult,
+  setTargetResult,
+}: UnitProps) {
   return (
     <div className="bg-[#EFF2F6] border-[1px] border-[#EBEAEA] rounded-[12px] px-[0.75rem] py-[1rem] overflow-hidden mb-8">
       <div className="w-full flex items-start">
@@ -12,9 +26,17 @@ export default function Result() {
             </div>
           </div>
         </div>
-        <div className="w-1/3 text-center bg-[#ffffff] text-[#212121] text-[0.875rem] rounded-[16px] p-2">
-          Centimeters
-        </div>
+        <select
+          value={targetResult}
+          onChange={(e) => setTargetResult(e.target.value)}
+          className="bg-[#ffffff] text-[#212121] focus:outline-none rounded-[16px] p-2"
+        >
+          {targetUnits.map((unit) => (
+            <option key={unit.id} value={unit.id}>
+              {unit.name}
+            </option>
+          ))}
+        </select>
       </div>
     </div>
   );

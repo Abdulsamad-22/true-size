@@ -1,11 +1,12 @@
 "use client";
 import { DIMENSIONS } from "../lib/units";
-import { Dimensions } from "../types";
+// import { Dimension } from "../types";
 import { useState } from "react";
+import { DimensionId } from "../types";
 
 interface DimensionProps {
-  setSelectedDimension: (value: string) => void;
-  selectedDimension: string;
+  selectedDimension: DimensionId;
+  setSelectedDimension: (d: DimensionId) => void;
 }
 
 // const dimensions: Dimensions[] = [
@@ -16,13 +17,12 @@ interface DimensionProps {
 // ];
 
 const dimensions = Object.values(DIMENSIONS);
-console.log(dimensions);
 
 export default function Dimension({
   selectedDimension,
   setSelectedDimension,
 }: DimensionProps) {
-  const handleSelection = (dimension: string) => {
+  const handleSelection = (dimension: DimensionId) => {
     if (dimension) {
       setSelectedDimension(dimension);
     }

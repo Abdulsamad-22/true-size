@@ -3,12 +3,29 @@ import Dimension from "@/src/components/Dimension";
 import InputMeasurement from "@/src/components/measurementInput";
 import Result from "@/src/components/Result";
 import { Camera, Ruler, RefreshCw, Info } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { DimensionId } from "@/src/types";
+import { DIMENSIONS } from "@/src/lib/units";
 
 export default function Home() {
-  const [selectedDimension, setSelectedDimension] = useState("length");
-  const [selectedUnit, setSelectedUnit] = useState([]);
-  const [targetUnit, setTargetUnit] = useState("in");
+  const [selectedDimension, setSelectedDimension] =
+    useState<DimensionId>("length");
+
+  const [selectedUnit, setSelectedUnit] = useState<string>("mm");
+
+  const [targetResult, setTargetResult] = useState<string>("in");
+
+  const targetUnits = DIMENSIONS[selectedDimension].units.filter(
+    (unit) => unit.id !== selectedUnit,
+  );
+
+  useEffect(() => {
+    if (!targetUnits.find((u) => u.id === targetResult)) {
+      setTargetResult(targetUnits[0]?.id ?? "");
+    }
+  }, [selectedUnit, selectedDimension]);
+
+  console.log("available units to be converted to", targetUnits);
   return (
     <div className="">
       <main>
@@ -30,7 +47,11 @@ export default function Home() {
           selectedUnit={selectedUnit}
           setSelectedUnit={setSelectedUnit}
         />
-        <Result />
+        <Result
+          targetUnits={targetUnits}
+          targetResult={targetResult}
+          setTargetResult={setTargetResult}
+        />
 
         <button className="w-full bg-[#2779fd] text-[#f3f3f3] rounded-[8px] px-4 py-3">
           Calculate
