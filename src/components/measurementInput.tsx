@@ -30,7 +30,7 @@ export default function InputMeasurement({
             <textarea
               value={inputValue}
               rows={1}
-              placeholder="1,200"
+              placeholder={`1,200${selectedUnit}`}
               onChange={(e) => {
                 const value = e.target.value;
                 if (/^[0-9]*\.?[0-9]*$/.test(value)) {
