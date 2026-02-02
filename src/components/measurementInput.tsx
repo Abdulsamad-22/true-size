@@ -20,19 +20,45 @@ export default function InputMeasurement({
 }: DimensionProps) {
   const units = DIMENSIONS[selectedDimension].units;
   return (
-    <div className="bg-[#EEF6FF] border-[1px] border-[#C7D7F1] rounded-[12px] px-[0.75rem] py-[1rem] mb-8 overflow-hidden">
+    <div className="bg-[#EEF6FF] border-[1px] border-[#C7D7F1] rounded-[12px] px-[0.75rem] py-[1rem] mb-8">
       <div className="w-full flex items-start justify-between">
-        <div className="w-2/3 flex flex-col">
+        <div className="w-2/3 flex flex-col gap-3">
           <label className="text-[#2779FD] text-[0.875rem] font-medium">
             Input
           </label>
           <div className="flex">
-            <input
-              type="number"
-              onChange={(e) => setInputValue(e.target.value)}
+            <textarea
               value={inputValue}
-              className="block text-[2.5rem] font-bold border-none outline-none focus:outline-none"
+              rows={1}
               placeholder="1,200"
+              onChange={(e) => {
+                const value = e.target.value;
+                if (/^[0-9]*\.?[0-9]*$/.test(value)) {
+                  setInputValue(value);
+                }
+              }}
+              onInput={(e) => {
+                const el = e.currentTarget;
+                el.style.height = "auto";
+
+                const lineHeight = 48;
+                const maxHeight = lineHeight * 2;
+                el.style.height = Math.min(el.scrollHeight, maxHeight) + "px";
+              }}
+              className="
+    w-full
+    max-w-[369px]
+    bg-transparent
+    text-[2.5rem]
+    font-bold
+    border-none
+    outline-none
+    resize-none
+    leading-[48px]
+    overflow-hidden
+    break-words
+    whitespace-pre-wrap
+  "
             />
           </div>
         </div>

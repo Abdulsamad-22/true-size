@@ -16,21 +16,26 @@ export default function Result({
   convertedValue,
 }: UnitProps) {
   return (
-    <div className="bg-[#EFF2F6] border-[1px] border-[#EBEAEA] rounded-[12px] px-[0.75rem] py-[1rem] overflow-hidden mb-8">
+    <div className="bg-[#EFF2F6] border-[1px] border-[#EBEAEA] rounded-[12px] px-[0.75rem] py-[1rem] mb-8">
       <div className="w-full flex items-start">
         <div className="w-2/3 flex flex-col">
           <label className="text-[#7D7D7D] text-[0.875rem] font-medium">
             Result
           </label>
-          <div className="flex">
-            <div className="text-[#212121] text-[2.5rem] font-bold">
-              {convertedValue.toFixed(2).toLocaleString()}
-              {
-                <span className="text-[1.25rem] font-medium">
-                  {targetResult}
-                </span>
-              }
-            </div>
+
+          <div
+            className="
+    w-[369px]
+    text-[#212121]
+    text-[2.5rem]
+    font-bold
+    whitespace-normal
+    break-all
+    line-clamp-2
+  "
+          >
+            {convertedValue.toFixed(2).toLocaleString()}
+            {<span className="text-[1.25rem] font-medium">{targetResult}</span>}
           </div>
         </div>
         <select

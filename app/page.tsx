@@ -59,6 +59,7 @@ export default function Home() {
           selectedDimension={selectedDimension}
           setSelectedUnit={setSelectedUnit}
           setTargetResult={setTargetResult}
+          setConvertedValue={setConvertedValue}
         />
         <InputMeasurement
           setSelectedDimension={setSelectedDimension}

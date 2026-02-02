@@ -8,6 +8,7 @@ interface DimensionProps {
   setSelectedDimension: (d: DimensionId) => void;
   setTargetResult: (u: string) => void;
   setSelectedUnit: (u: string) => void;
+  setConvertedValue: (u: number) => void;
 }
 
 const dimensions = Object.values(DIMENSIONS);
@@ -17,6 +18,7 @@ export default function Dimension({
   setSelectedDimension,
   setSelectedUnit,
   setTargetResult,
+  setConvertedValue,
 }: DimensionProps) {
   useEffect(() => {
     const units = DIMENSIONS[selectedDimension].units;
@@ -24,6 +26,7 @@ export default function Dimension({
 
     setSelectedUnit(units[0].id);
     setTargetResult(units[1].id);
+    setConvertedValue(0);
   }, [selectedDimension]);
 
   const handleSelection = (dimension: DimensionId) => {
