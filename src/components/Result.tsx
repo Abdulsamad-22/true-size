@@ -15,6 +15,11 @@ export default function Result({
   setTargetResult,
   convertedValue,
 }: UnitProps) {
+  const formattedValue = new Intl.NumberFormat("en-US", {
+    minimumFractionDigits: convertedValue % 1 === 0 ? 0 : 2,
+    maximumFractionDigits: 2,
+  }).format(convertedValue);
+
   return (
     <div className="bg-[#EFF2F6] border-[1px] border-[#EBEAEA] rounded-[12px] px-[0.75rem] py-[1rem] mb-8">
       <div className="w-full flex items-start">
@@ -34,7 +39,7 @@ export default function Result({
     line-clamp-2
   "
           >
-            {convertedValue.toFixed(2).toLocaleString()}
+            {formattedValue}
             {<span className="text-[1.25rem] font-medium">{targetResult}</span>}
           </div>
         </div>
