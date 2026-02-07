@@ -20,7 +20,7 @@ export async function POST(req: Request) {
     // Use familiar examples.
     // Keep it simple, friendly, and no more than 1 sentence.
     // `;
-    const prompt = `In one clear sentence, explain what ${numericValue} ${selectedUnit} feels like in everyday Nigerian life using a realistic comparison that matches the unit (distance with travel time or places, weight with bags or loads, volume with water or fuel), then briefly relate it to ${convertedValue} ${targetResult}.`;
+    const prompt = `In one short sentence, explain what ${numericValue} ${selectedUnit} feels like using a realistic everyday Nigerian comparison that strictly matches the unit type (distance with travel or places, weight with loads or carrying, volume with containers or liquids, temperature with weather), do NOT mention Lagos or any city unless necessary, and briefly relate it to ${convertedValue} ${targetResult}.`;
 
     const completion = await groq.chat.completions.create({
       model: "openai/gpt-oss-120b",
