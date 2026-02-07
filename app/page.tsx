@@ -18,6 +18,7 @@ export default function Home() {
   const [targetResult, setTargetResult] = useState<string>("in");
   const [aiDescription, setAIDescription] = useState<string>("");
   const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [isCalculating, setIsCalculating] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
 
   const targetUnits = useMemo(() => {
@@ -37,14 +38,19 @@ export default function Home() {
     console.log(testView);
   }
 
+  const wait = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
+
   const handleCalculation = async (
     numericValue: number,
     selectedUnit: string,
     targetResult: string,
     selectedDimension: DimensionId,
   ) => {
+    setIsCalculating(true);
     if (!numericValue) return;
 
+    await wait(2000 + Math.random() * 1000);
     // Convert values
     const { result, baseValue } = convert(
       numericValue,
@@ -55,10 +61,9 @@ export default function Home() {
 
     setConvertedValue(result);
 
-    // Call Groq API
     try {
+      // Call Groq API
       setIsLoadingAI(true);
-
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -96,6 +101,7 @@ export default function Home() {
       setAIDescription("Unable to generate explanation right now.");
     } finally {
       setIsLoadingAI(false);
+      setIsCalculating(false);
     }
   };
 
@@ -118,6 +124,7 @@ export default function Home() {
           setSelectedUnit={setSelectedUnit}
           setTargetResult={setTargetResult}
           setConvertedValue={setConvertedValue}
+          setAIDescription={setAIDescription}
         />
         <InputMeasurement
           setSelectedDimension={setSelectedDimension}
@@ -143,9 +150,14 @@ export default function Home() {
               selectedDimension,
             )
           }
-          className="w-full bg-[#2779fd] text-[#f3f3f3] rounded-[8px] px-4 py-3"
+          className={`w-full text-[#f3f3f3] rounded-[8px] px-4 py-3 ${isCalculating ? "animate-bounce bg-[#7B7B7B]" : "bg-[#338ADE]"} transition-all duration-200`}
+          disabled={isCalculating}
         >
-          Calculate
+          {isCalculating && (
+            <span className="animate-spin inline-block mr-2">⏳</span>
+          )}
+
+          {isCalculating ? "Measuring…" : "Convert"}
         </button>
         <AIDescription
           isLoadingAI={isLoadingAI}
