@@ -1,5 +1,5 @@
 "use client";
-import { ChevronUp, ChevronDown, RefreshCcw } from "lucide-react";
+import { ChevronDown, RefreshCcw } from "lucide-react";
 import { useState } from "react";
 import { convert } from "../lib/units";
 import { DimensionId } from "../types";
@@ -80,7 +80,6 @@ export default function AIDescription({
       setIsLoadingAI(false);
     }
   };
-  const Icon = openDescription ? ChevronUp : ChevronDown;
 
   return (
     <div className="border-[1px] border-[#C7D7F1] rounded-[12px] p-[1rem] mt-8">
@@ -94,29 +93,61 @@ export default function AIDescription({
           </h2>
         </div>
 
-        {<Icon onClick={handleDescription} size={20} />}
+        <ChevronDown
+          onClick={handleDescription}
+          className={`
+  cursor-pointer
+  transition-transform
+  duration-500
+  ease-[cubic-bezier(0.22,1,0.36,1)]
+  active:scale-90
+  ${openDescription ? "rotate-180" : "rotate-0"}
+`}
+        />
       </div>
 
-      {openDescription && (
-        <div className="bg-[#338ADE] p-[0.625rem] rounded-[8px] mt-[1rem]">
-          <RefreshCcw
-            onClick={handleRefreshDescription}
-            className="text-[#f3f3f3] mb-2"
-            size={20}
-          />
-          {isLoadingAI && (
-            <p className="text-sm text-[#f3f3f3] mt-2">
-              Generating explanation…
-            </p>
-          )}
+      <div
+        className={`
+    grid transition-all duration-700
+    ease-[cubic-bezier(0.22,1,0.36,1)]
+    ${openDescription ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}
+  `}
+      >
+        <div className="overflow-hidden">
+          <div className="bg-[#338ADE] p-[0.625rem] rounded-[8px] mt-[1rem]">
+            <RefreshCcw
+              onClick={handleRefreshDescription}
+              className={`
+    text-[#f3f3f3]
+    mb-2
+    cursor-pointer
+    transition-transform
+    duration-300
+    ${isLoadingAI ? "animate-spin [animation-duration:1.2s]" : ""}
+  `}
+              size={20}
+            />
 
-          {aiDescription && !isLoadingAI && (
-            <p className="text-[0.875rem] text-[#f3f3f3] leading-relaxed">
-              {aiDescription}
-            </p>
-          )}
+            {isLoadingAI && (
+              <p className="text-sm text-[#f3f3f3] mt-2">
+                Generating explanation…
+              </p>
+            )}
+
+            {aiDescription === "" && !isLoadingAI && (
+              <p className="text-[0.875rem] text-[#f3f3f3] leading-relaxed">
+                There no descriptions now, make a conversion!
+              </p>
+            )}
+
+            {aiDescription && !isLoadingAI && (
+              <p className="text-[0.875rem] text-[#f3f3f3] leading-relaxed">
+                {aiDescription}
+              </p>
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
