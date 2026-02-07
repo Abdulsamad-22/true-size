@@ -2,11 +2,12 @@
 import Dimension from "@/src/components/Dimension";
 import InputMeasurement from "@/src/components/measurementInput";
 import Result from "@/src/components/Result";
-import { Camera, Ruler, RefreshCw, Info, History } from "lucide-react";
+import { Ruler, History } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
-import { DimensionId } from "@/src/types";
+import { DimensionId, HistoryItem } from "@/src/types";
 import { convert, DIMENSIONS } from "@/src/lib/units";
 import AIDescription from "@/src/components/AIDescription";
+import ConverSionHistory from "@/src/components/History";
 
 export default function Home() {
   const [selectedDimension, setSelectedDimension] =
@@ -17,6 +18,7 @@ export default function Home() {
   const [targetResult, setTargetResult] = useState<string>("in");
   const [aiDescription, setAIDescription] = useState<string>("");
   const [isLoadingAI, setIsLoadingAI] = useState(false);
+  const [history, setHistory] = useState<HistoryItem[]>([]);
 
   const targetUnits = useMemo(() => {
     return DIMENSIONS[selectedDimension].units.filter(
@@ -43,7 +45,7 @@ export default function Home() {
   ) => {
     if (!numericValue) return;
 
-    // 1️⃣ Convert
+    // Convert values
     const { result, baseValue } = convert(
       numericValue,
       selectedUnit,
@@ -53,7 +55,7 @@ export default function Home() {
 
     setConvertedValue(result);
 
-    // 2️⃣ Call Groq API
+    // Call Groq API
     try {
       setIsLoadingAI(true);
 
@@ -74,6 +76,21 @@ export default function Home() {
 
       const data = await res.json();
       setAIDescription(data.text);
+
+      // Set conversion history
+      setHistory((prev) => [
+        {
+          id: crypto.randomUUID(),
+          numericValue,
+          selectedUnit,
+          convertedValue: result,
+          targetUnit: targetResult,
+          aiDescription: data.text,
+          dimension: selectedDimension,
+          timestamp: Date.now(),
+        },
+        ...prev,
+      ]);
     } catch (error) {
       console.error("AI ERROR:", error);
       setAIDescription("Unable to generate explanation right now.");
@@ -92,7 +109,8 @@ export default function Home() {
               TrueSize
             </h1>
           </div>
-          <History size={24} />
+
+          <History className="text-[#898989]" size={24} />
         </header>
         <Dimension
           setSelectedDimension={setSelectedDimension}
@@ -132,17 +150,16 @@ export default function Home() {
         <AIDescription
           isLoadingAI={isLoadingAI}
           aiDescription={aiDescription}
+          setIsLoadingAI={setIsLoadingAI}
+          setAIDescription={setAIDescription}
+          setHistory={setHistory}
+          targetResult={targetResult}
+          selectedUnit={selectedUnit}
+          selectedDimension={selectedDimension}
+          numericValue={numericValue}
         />
 
-        {/* {isLoadingAI && (
-          <p className="text-sm text-gray-500 mt-2">Generating explanation…</p>
-        )}
-
-        {aiDescription && !isLoadingAI && (
-          <p className="mt-3 text-[0.9rem] text-[#4a4a4a] leading-relaxed">
-            {aiDescription}
-          </p>
-        )} */}
+        <ConverSionHistory history={history} />
       </main>
     </div>
   );
