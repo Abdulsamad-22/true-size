@@ -25,3 +25,14 @@ export interface Measurement {
   unit: string;
   timestamp: Date;
 }
+
+export interface HistoryItem {
+  id: string;
+  numericValue: number;
+  selectedUnit: string;
+  convertedValue: number;
+  targetUnit: string;
+  aiDescription: string;
+  dimension: DimensionId;
+  timestamp: number;
+}
