@@ -17,7 +17,7 @@ export default function Result() {
 
           <div
             className="
-    w-[369px]
+            w-full
     text-[#212121]
     text-[2.5rem]
     font-bold

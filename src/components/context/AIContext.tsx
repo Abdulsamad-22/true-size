@@ -26,7 +26,6 @@ export default function AIContextProvider({
   const [aiDescription, setAIDescription] = useState<string>("");
   const [isLoadingAI, setIsLoadingAI] = useState(false);
   const [history, setHistory] = useState<HistoryItem[]>([]);
-  console.log(history);
 
   useEffect(() => {
     const stored = localStorage.getItem(HISTORY_KEY);
