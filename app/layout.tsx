@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import ConversionProvider from "@/src/components/context/ConversionContext";
+import AIContextProvider from "@/src/components/context/AIContext";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -22,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${jetbrainsMono.variable} antialiased`}>
-        {children}
+        <AIContextProvider>
+          <ConversionProvider>{children}</ConversionProvider>
+        </AIContextProvider>
       </body>
     </html>
   );
