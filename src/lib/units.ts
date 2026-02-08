@@ -93,15 +93,6 @@ export const DIMENSIONS: Record<DimensionId, Dimension> = {
       { id: "f", name: "Fahrenheit", symbol: "°F" },
       { id: "k", name: "Kelvin", symbol: "K" },
     ],
-    conversions: {
-      ml: 1,
-      l: 1000,
-      cup: 236.588,
-      pt: 473.176,
-      qt: 946.353,
-      gal: 3785.41,
-      m3: 1000000,
-    },
   },
 
   // area: {
@@ -144,13 +135,15 @@ export function convert(
   const dim = DIMENSIONS[dimension];
 
   // Special case: Temperature (non-linear)
-  // if (dimension === 'temperature') {
-  //   return convertTemperature(value, fromUnit, toUnit);
-  // }
+  if (dimension === "temperature") {
+    const result = convertTemperature(value, fromUnit, toUnit);
+    return { baseValue: value, result }; // baseValue can just be input
+  }
 
+  if (!dim.conversions)
+    throw new Error(`Conversions not defined for ${dimension}`);
   // Linear conversions (Length, Weight, Volume, Area)
   const baseValue = value * dim.conversions[fromUnit];
-  console.log("converted value", baseValue);
   const result = baseValue / dim.conversions[toUnit];
 
   return {
@@ -159,15 +152,16 @@ export function convert(
   };
 }
 
-// function convertTemperature(value: number, from: string, to: string) {
-//   // Convert to Celsius first
-//   let celsius;
-//   if (from === "c") celsius = value;
-//   else if (from === "f") celsius = ((value - 32) * 5) / 9;
-//   else if (from === "k") celsius = value - 273.15;
+function convertTemperature(value: number, from: string, to: string) {
+  let celsius: number;
 
-//   // Convert from Celsius to target
-//   if (to === "c") return celsius;
-//   else if (to === "f") return (celsius * 9) / 5 + 32;
-//   else if (to === "k") return celsius + 273.15;
-// }
+  if (from === "c") celsius = value;
+  else if (from === "f") celsius = ((value - 32) * 5) / 9;
+  else if (from === "k") celsius = value - 273.15;
+  else throw new Error(`Unsupported from-unit: ${from}`);
+
+  if (to === "c") return celsius;
+  else if (to === "f") return (celsius * 9) / 5 + 32;
+  else if (to === "k") return celsius + 273.15;
+  else throw new Error(`Unsupported to-unit: ${to}`);
+}
