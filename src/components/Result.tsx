@@ -1,19 +1,10 @@
 import { Unit } from "../types";
+import { useConversion } from "./context/useConversion";
 import formattedValue from "./utils/FormatValues";
 
-interface UnitProps {
-  targetUnits: Unit[];
-  targetResult: string;
-  setTargetResult: (u: string) => void;
-  convertedValue: number;
-}
-
-export default function Result({
-  targetUnits,
-  targetResult,
-  setTargetResult,
-  convertedValue,
-}: UnitProps) {
+export default function Result() {
+  const { targetUnits, targetResult, setTargetResult, convertedValue } =
+    useConversion();
   const formattedResult = formattedValue(convertedValue);
 
   return (

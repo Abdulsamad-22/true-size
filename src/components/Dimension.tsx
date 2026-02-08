@@ -2,26 +2,20 @@
 import { DIMENSIONS } from "../lib/units";
 import { useEffect, useState } from "react";
 import { DimensionId } from "../types";
-
-interface DimensionProps {
-  selectedDimension: DimensionId;
-  setSelectedDimension: (d: DimensionId) => void;
-  setTargetResult: (u: string) => void;
-  setSelectedUnit: (u: string) => void;
-  setConvertedValue: (u: number) => void;
-  setAIDescription: (d: string) => void;
-}
+import { useConversion } from "./context/useConversion";
+import { useAI } from "./context/useAI";
 
 const dimensions = Object.values(DIMENSIONS);
 
-export default function Dimension({
-  selectedDimension,
-  setSelectedDimension,
-  setSelectedUnit,
-  setTargetResult,
-  setConvertedValue,
-  setAIDescription,
-}: DimensionProps) {
+export default function Dimension() {
+  const {
+    setSelectedDimension,
+    selectedDimension,
+    setSelectedUnit,
+    setTargetResult,
+    setConvertedValue,
+  } = useConversion();
+  const { setAIDescription } = useAI();
   const [activeIndex, setActiveIndex] = useState(0);
   useEffect(() => {
     const units = DIMENSIONS[selectedDimension].units;

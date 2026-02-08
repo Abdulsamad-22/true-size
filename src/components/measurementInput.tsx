@@ -1,4 +1,5 @@
 import { DIMENSIONS } from "../lib/units";
+import { useConversion } from "./context/useConversion";
 
 type DimensionId = "length" | "weight" | "volume" | "temperature";
 
@@ -11,13 +12,14 @@ interface DimensionProps {
   setInputValue: (v: string) => void;
 }
 
-export default function InputMeasurement({
-  selectedDimension,
-  selectedUnit,
-  setSelectedUnit,
-  inputValue,
-  setInputValue,
-}: DimensionProps) {
+export default function InputMeasurement() {
+  const {
+    selectedDimension,
+    selectedUnit,
+    setSelectedUnit,
+    inputValue,
+    setInputValue,
+  } = useConversion();
   const units = DIMENSIONS[selectedDimension].units;
   return (
     <div className="bg-[#EEF6FF] border-[1px] border-[#C7D7F1] rounded-[12px] px-[0.75rem] py-[1rem] mb-8">
