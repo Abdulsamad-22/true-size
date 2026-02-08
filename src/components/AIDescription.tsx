@@ -2,37 +2,28 @@
 import { ChevronDown, RefreshCcw } from "lucide-react";
 import { useState } from "react";
 import { convert } from "../lib/units";
-import { DimensionId } from "../types";
-import { HistoryItem } from "../types";
-
-type SetHistory = React.Dispatch<React.SetStateAction<HistoryItem[]>>;
+import { useConversion } from "./context/useConversion";
+import { useAI } from "./context/useAI";
 
 interface descriptionProps {
-  aiDescription: string;
-  isLoadingAI: boolean;
-  setIsLoadingAI: (u: boolean) => void;
-  setAIDescription: (d: string) => void;
-  selectedUnit: string;
-  selectedDimension: DimensionId;
-  targetResult: string;
   numericValue: number;
-  setHistory: SetHistory;
 }
-export default function AIDescription({
-  aiDescription,
-  isLoadingAI,
-  setIsLoadingAI,
-  setAIDescription,
-  selectedUnit,
-  selectedDimension,
-  targetResult,
-  numericValue,
-  setHistory,
-}: descriptionProps) {
+export default function AIDescription() {
+  const { selectedDimension, selectedUnit, targetResult, inputValue } =
+    useConversion();
+  const {
+    aiDescription,
+    isLoadingAI,
+    setIsLoadingAI,
+    setAIDescription,
+    setHistory,
+  } = useAI();
+
   const [openDescription, setOpenDescription] = useState<boolean>(false);
   const handleDescription = () => {
     setOpenDescription((prev) => !prev);
   };
+  const numericValue = Number(inputValue);
 
   const handleRefreshDescription = async () => {
     const { result, baseValue } = convert(

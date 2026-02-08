@@ -1,17 +1,10 @@
-// export interface Dimensions {
-//   id: string;
-//   name: string;
-//   // units: [];
-//   conversions: Record<string, number>;
-// }
-
 export type DimensionId = "length" | "weight" | "volume" | "temperature";
 
 export interface Dimension {
   id: DimensionId;
   name: string;
   units: Unit[];
-  conversions: Record<string, number>;
+  conversions?: Record<string, number>;
 }
 
 export interface Unit {
