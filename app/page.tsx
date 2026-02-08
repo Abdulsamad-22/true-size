@@ -30,7 +30,6 @@ export default function Home() {
     }
   }, [targetUnits]);
   const numericValue = Number(inputValue);
-  console.log(numericValue, selectedDimension, selectedUnit, targetResult);
   const wait = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -89,15 +88,6 @@ export default function Home() {
         },
         ...prev,
       ]);
-
-      console.log(
-        "test buutton",
-        numericValue,
-        result,
-        selectedDimension,
-        selectedUnit,
-        targetResult,
-      );
     } catch (error) {
       console.error("AI ERROR:", error);
       setAIDescription("Unable to generate explanation right now.");

@@ -8,7 +8,6 @@ import Link from "next/link";
 
 export default function ConverSionHistory() {
   const { history, setHistory } = useAI();
-  console.log(history);
   useEffect(() => {
     localStorage.setItem("conversion-history", JSON.stringify(history));
   }, [history]);

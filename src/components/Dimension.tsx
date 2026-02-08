@@ -39,7 +39,7 @@ export default function Dimension() {
         className="absolute top-3 bottom-3 bg-white rounded-[4px]
                transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)]"
         style={{
-          width: `calc((100% - 1rem * ${dimensions.length - 1}) / ${dimensions.length})`,
+          width: `calc((26.25rem - 1rem * ${dimensions.length - 1}) / ${dimensions.length})`,
           transform: `translateX(${activeIndex * 100}%)`,
         }}
       />
