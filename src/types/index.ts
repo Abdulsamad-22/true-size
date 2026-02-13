@@ -29,3 +29,19 @@ export interface HistoryItem {
   dimension: DimensionId;
   timestamp: number;
 }
+
+export interface Point {
+  x: number;
+  y: number;
+}
+
+export interface MeasurementLine {
+  start: Point;
+  end: Point;
+  distanceCm: number;
+}
+
+export interface CalibrationData {
+  pixelsPerCm: number;
+  timestamp: Date;
+}
