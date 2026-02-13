@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import Groq from "groq-sdk";
 import { DimensionId } from "@/src/types";
+import formattedValue from "@/src/components/utils/FormatValues";
 
 const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY!,
 });
-
 export async function POST(req: Request) {
   try {
     const {
@@ -39,23 +39,23 @@ export async function POST(req: Request) {
       switch (dimension) {
         case "length":
           return `
-In one clear sentence, describe what ${numericValue} ${selectedUnit} represents by comparing it to a real, well-known journey or distance using named locations in Nigeria or globally recognised routes (e.g. Abuja–Kaduna road, Third Mainland Bridge, London–Paris), including an approximate travel time where reasonable, and briefly relate it to its equivalent of ${convertedValue} ${targetUnit}. 
+In one clear sentence, describe what ${formattedValue(numericValue)} ${selectedUnit} represents by comparing it to a real, well-known journey or distance using named locations in Nigeria or globally recognised routes (e.g. Abuja–Kaduna road, Third Mainland Bridge, London–Paris), including an approximate travel time where reasonable, and briefly relate it to its equivalent of ${convertedValue} ${targetUnit}. 
 Avoid vague or invented places.
 `;
 
         case "weight":
           return `
-In one clear sentence, explain what ${numericValue} ${selectedUnit} feels like by comparing it to the weight of familiar real-life items commonly encountered in Nigeria (such as bags of rice, cement, bottled water, or gas cylinders), and briefly relate it to its equivalent of ${convertedValue} ${targetUnit}.
+In one clear sentence, explain what ${formattedValue(numericValue)} ${selectedUnit} feels like by comparing it to the weight of familiar real-life items commonly encountered in Nigeria (such as bags of rice, cement, bottled water, or gas cylinders), and briefly relate it to its equivalent of ${convertedValue} ${targetUnit}.
 `;
 
         case "volume":
           return `
-In one clear sentence, describe what ${numericValue} ${selectedUnit} represents by comparing it to real, commonly used containers or liquid quantities (such as water bottles, jerry cans, buckets, or fuel tanks), strictly avoiding distance or time references, and briefly relate it to its equivalent of ${convertedValue} ${targetUnit}.
+In one clear sentence, describe what ${formattedValue(numericValue)} ${selectedUnit} represents by comparing it to real, commonly used containers or liquid quantities (such as water bottles, jerry cans, buckets, or fuel tanks), strictly avoiding distance or time references, and briefly relate it to its equivalent of ${convertedValue} ${targetUnit}.
 `;
 
         case "temperature":
           return `
-In one clear sentence, explain what ${numericValue} ${selectedUnit} feels like by comparing it to familiar weather conditions or physical sensations (such as a hot afternoon sun, cool harmattan morning, or refrigerated cold), and briefly relate it to its equivalent of ${convertedValue} ${targetUnit}.
+In one clear sentence, explain what ${formattedValue(numericValue)} ${selectedUnit} feels like by comparing it to familiar weather conditions or physical sensations (such as a hot afternoon sun, cool harmattan morning, or refrigerated cold), and briefly relate it to its equivalent of ${convertedValue} ${targetUnit}.
 `;
 
         default:
