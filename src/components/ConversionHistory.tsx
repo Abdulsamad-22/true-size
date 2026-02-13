@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-import formattedValue from "./utils/FormatValues";
+import formattedValue, { formatTimestamp } from "./utils/FormatValues";
 import { useAI } from "./context/useAI";
 import { Rocket, BrushCleaning, ChevronLeft } from "lucide-react";
 import Link from "next/link";
@@ -47,6 +47,9 @@ export default function ConverSionHistory() {
           key={item.id}
           className="rounded-[12px] border-[1px] border-[#C7D7F1] p-4 bg-[#f3f3f3]"
         >
+          <p className="font-semibold mb-1">
+            {formatTimestamp(item.timestamp)}
+          </p>
           <div className="text-sm text-gray-600">
             {formattedValue(item.numericValue)} {item.selectedUnit} →{" "}
             {new Intl.NumberFormat("en-NG", {
