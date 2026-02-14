@@ -45,3 +45,42 @@ export interface CalibrationData {
   pixelsPerCm: number;
   timestamp: Date;
 }
+
+export interface Point3D {
+  x: number;
+  y: number;
+  z: number;
+}
+
+export interface ARAnchor {
+  id: string;
+  position: Point3D;
+  timestamp: Date;
+}
+
+export interface ARMeasurement {
+  id: string;
+  startAnchor: ARAnchor;
+  endAnchor: ARAnchor;
+  distanceMeters: number;
+  distanceCm: number;
+  distanceInches: number;
+  timestamp: Date;
+}
+
+export type ARSession = "idle" | "starting" | "active" | "error";
+
+export interface HitTestResult {
+  position: Point3D;
+  pose: XRPose;
+}
+
+export interface DetectedPlane {
+  id: string;
+  polygon: Point3D[]; // Corner points of detected surface
+  center: Point3D;
+  width: number; // meters
+  height: number; // meters (depth)
+  orientation: "horizontal" | "vertical";
+  timestamp: Date;
+}

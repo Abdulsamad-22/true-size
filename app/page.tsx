@@ -10,7 +10,6 @@ import AIDescription from "@/src/components/AIDescription";
 import { useConversion } from "@/src/components/context/useConversion";
 import Link from "next/link";
 import { useAI } from "@/src/components/context/useAI";
-import TestPage from "./TestPage";
 
 export default function Home() {
   const {
@@ -136,7 +135,12 @@ export default function Home() {
           {isCalculating ? "Measuring…" : "Convert"}
         </button>
         <AIDescription />
-        <TestPage />
+        <Link
+          href="/test"
+          className="bg-[#338ADE] text-[#f3f3f3] py-4 px-4 rounded-[12px]"
+        >
+          AR Measurement
+        </Link>
       </main>
     </div>
   );
