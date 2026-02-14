@@ -21,7 +21,7 @@ export default function WebXRMeasurement({
   onClose,
 }: WebXRMeasurementProps) {
   const [isActive, setIsActive] = useState(false);
-  const [isStarting, setIsStarting] = useState(false);
+  const [shouldStartAR, setShouldStartAR] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [anchors, setAnchors] = useState<ARAnchor[]>([]);
   const [measurements, setMeasurements] = useState<ARMeasurement[]>([]);
@@ -35,44 +35,64 @@ export default function WebXRMeasurement({
   const animationFrameRef = useRef<number>(0);
 
   useEffect(() => {
+    if (shouldStartAR && canvasRef.current && !isActive) {
+      initializeAR();
+    }
+  }, [shouldStartAR, isActive]);
+
+  useEffect(() => {
     return () => {
       handleStop();
     };
   }, []);
 
-  const handleStart = async () => {
-    if (!canvasRef.current) return;
-
+  const handleStartClick = async () => {
     try {
-      setIsStarting(true);
       setError(null);
 
-      // Check support
+      // Check WebXR support first
       if (!navigator.xr) {
         throw new Error("WebXR not supported. Use Chrome on Android.");
       }
 
       const supported = await navigator.xr.isSessionSupported("immersive-ar");
+
       if (!supported) {
         throw new Error("AR not supported on this device.");
       }
 
-      // Create session manager
+      setShouldStartAR(true);
+    } catch (err) {
+      console.error("AR check failed:", err);
+      setError(
+        err instanceof Error ? err.message : "Failed to check AR support",
+      );
+    }
+  };
+
+  const initializeAR = async () => {
+    if (!canvasRef.current) {
+      console.error("Canvas still not available!");
+      return;
+    }
+
+    try {
+      console.log("1. Creating session manager...");
       const manager = new WebXRSessionManager();
       sessionManagerRef.current = manager;
 
-      // Start session
+      console.log("2. Starting AR session...");
       await manager.startSession(canvasRef.current);
 
+      console.log("AR session started!");
       setIsActive(true);
-      setIsStarting(false);
 
       // Start render loop
       startRenderLoop(manager);
     } catch (err) {
-      console.error("AR start failed:", err);
+      console.error("AR initialization failed:", err);
       setError(err instanceof Error ? err.message : "Failed to start AR");
-      setIsStarting(false);
+      setShouldStartAR(false);
     }
   };
 
@@ -172,8 +192,8 @@ export default function WebXRMeasurement({
 
   return (
     <div className="fixed inset-0 z-50 bg-black">
-      {!isActive ? (
-        // START SCREEN
+      {!shouldStartAR ? (
+        // START SCREEN (before AR initiated)
         <div className="flex flex-col items-center justify-center min-h-screen p-8">
           <Camera size={64} className="mb-6 text-blue-500" />
           <h2 className="text-2xl font-bold text-white mb-2">AR Measurement</h2>
@@ -198,11 +218,10 @@ export default function WebXRMeasurement({
               </button>
             )}
             <button
-              onClick={handleStart}
-              disabled={isStarting}
-              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-lg hover:shadow-lg transition-all disabled:opacity-50"
+              onClick={handleStartClick}
+              className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded-lg hover:shadow-lg transition-all"
             >
-              {isStarting ? "Starting AR..." : "Start AR"}
+              Start AR
             </button>
           </div>
 
@@ -216,8 +235,15 @@ export default function WebXRMeasurement({
             </ul>
           </div>
         </div>
+      ) : !isActive ? (
+        // LOADING SCREEN (AR session initializing)
+        <div className="flex flex-col items-center justify-center min-h-screen p-8">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-500 mb-4" />
+          <p className="text-white text-lg font-medium">Starting AR...</p>
+          <p className="text-gray-400 text-sm mt-2">Please wait</p>
+        </div>
       ) : (
-        // AR VIEW
+        // AR VIEW (session active)
         <div className="relative w-full h-full">
           {/* WebXR Canvas */}
           <canvas
@@ -275,7 +301,6 @@ export default function WebXRMeasurement({
             {/* Bottom Instructions & Measurements */}
             <div className="absolute bottom-4 left-4 right-4 pointer-events-auto">
               <div className="bg-black/80 backdrop-blur-sm rounded-xl p-4">
-                {/* Instructions */}
                 <div className="flex items-center gap-3 mb-3">
                   <div
                     className={`w-3 h-3 rounded-full ${
@@ -289,7 +314,6 @@ export default function WebXRMeasurement({
                   </p>
                 </div>
 
-                {/* Points placed indicator */}
                 {anchors.length > 0 && (
                   <div className="mb-3 p-2 bg-purple-500/20 border border-purple-500/30 rounded-lg">
                     <p className="text-purple-300 text-sm">
@@ -298,7 +322,6 @@ export default function WebXRMeasurement({
                   </div>
                 )}
 
-                {/* Measurements */}
                 {measurements.length > 0 && (
                   <div className="pt-3 border-t border-white/20">
                     <div className="flex justify-between items-center mb-2">
@@ -313,7 +336,7 @@ export default function WebXRMeasurement({
                     {measurements
                       .slice(-3)
                       .reverse()
-                      .map((m, idx) => (
+                      .map((m) => (
                         <div
                           key={m.id}
                           className="flex items-center gap-2 mb-2"
@@ -330,7 +353,6 @@ export default function WebXRMeasurement({
                   </div>
                 )}
 
-                {/* Debug info */}
                 {currentHitPosition && (
                   <div className="mt-2 pt-2 border-t border-white/10">
                     <p className="text-gray-500 text-xs font-mono">
