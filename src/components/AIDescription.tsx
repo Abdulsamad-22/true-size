@@ -73,7 +73,7 @@ export default function AIDescription() {
   };
 
   return (
-    <div className="border-[1px] border-[#C7D7F1] rounded-[12px] p-[1rem] mt-8">
+    <div className="border-[1px] border-[#C7D7F1] rounded-[12px] p-[1rem] mt-8 mb-12">
       <div className="flex items-center justify-between">
         <div className="flex item-center gap-2">
           <div className="w-7 h-7 bg-[#338ADE] flex justify-center items-center py-[0.25rem] px-[0.5rem] rounded-[4px]">
