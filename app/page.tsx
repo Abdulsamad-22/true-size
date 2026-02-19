@@ -2,7 +2,7 @@
 import Dimension from "@/src/components/Dimension";
 import InputMeasurement from "@/src/components/measurementInput";
 import Result from "@/src/components/Result";
-import { Ruler, History } from "lucide-react";
+import { Ruler, History, ArrowUp, ArrowDown } from "lucide-react";
 import { useState, useEffect } from "react";
 import { DimensionId } from "@/src/types";
 import { convert } from "@/src/lib/units";
@@ -113,8 +113,17 @@ export default function Home() {
           </Link>
         </header>
         <Dimension />
-        <InputMeasurement />
-        <Result />
+        <div className="relative">
+          <div
+            className="bg-[#338ADE] absolute h-9 w-9 flex items-center justify-center text-[#f3f3f3] -space-x-[0.2rem] rounded-full 
+              left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+          >
+            <ArrowDown size={16} />
+            <ArrowUp size={16} />
+          </div>
+          <InputMeasurement />
+          <Result />
+        </div>
 
         <button
           onClick={() =>
@@ -135,12 +144,6 @@ export default function Home() {
           {isCalculating ? "Measuring…" : "Convert"}
         </button>
         <AIDescription />
-        <Link
-          href="/test"
-          className="bg-[#338ADE] text-[#f3f3f3] py-4 px-4 rounded-[12px]"
-        >
-          AR Measurement
-        </Link>
       </main>
     </div>
   );
